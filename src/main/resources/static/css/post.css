@@ -1,0 +1,41 @@
+.blur {
+    /* Add the blur effect */
+    filter: blur(6px);
+    -webkit-filter: blur(6px);
+
+    /* Full height */
+    /*height: 100%;*/
+
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.card-image{
+    height: 300px;
+    overflow: hidden;
+}
+#map {
+    height: 300px;
+}
+#nav-content{
+    width: 100%;
+    height: 150px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url('https://kbdevstorage1.blob.core.windows.net/asset-blobs/19881_en_1');
+}
+#header{
+    z-index: 10000;
+}
+.tabs .tab a {
+    color: #2e7d32;
+}
+.tabs .tab a:hover, .tabs .tab a.active{
+    color: #2e7d32;
+}
+
+.tabs .indicator{
+    background-color: #2e7d32;
+}
