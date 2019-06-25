@@ -8,8 +8,10 @@ import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
-import ru.com.melt.info.controller.ProfileController;
+import org.springframework.web.servlet.DispatcherServlet;
+import ru.com.melt.info.controller.PublicDataController;
 import ru.com.melt.info.filter.ApplicationFilter;
+import ru.com.melt.info.filter.ResumeFilter;
 import ru.com.melt.info.listener.ApplicationListener;
 
 import javax.servlet.*;
@@ -18,49 +20,48 @@ import java.util.EnumSet;
 @Configuration
 public class InfoWebApplicationInitializer implements WebApplicationInitializer {
     @Override
-    public void onStartup(ServletContext servletContext) throws ServletException {
-        WebApplicationContext context = createWebApplicationContext(servletContext);
+    public void onStartup(ServletContext container) throws ServletException {
+        WebApplicationContext ctx = createWebApplicationContext(container);
 
-        servletContext.setSessionTrackingModes(EnumSet.of(SessionTrackingMode.COOKIE));
-        servletContext.addListener(new ContextLoaderListener(context));
-        servletContext.addListener(context.getBean(ApplicationListener.class));
+        container.setSessionTrackingModes(EnumSet.of(SessionTrackingMode.COOKIE));
+        container.addListener(new ContextLoaderListener(ctx));
+        container.addListener(ctx.getBean(ApplicationListener.class));
 
-        registerFilters(servletContext, context);
-        registerServlet(servletContext, context.getBean(ProfileController.class), "/profile");
+        registerFilters(container, ctx);
+        registerSpringMVCDispatcherServlet(container, ctx);
     }
 
-
-    private WebApplicationContext createWebApplicationContext(ServletContext servletContext) {
-        AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
-        context.scan("ru.com.melt.configuration");
-        context.setServletContext(servletContext);
-        context.refresh();
-        return context;
+    private WebApplicationContext createWebApplicationContext(ServletContext container) {
+        AnnotationConfigWebApplicationContext ctx = new AnnotationConfigWebApplicationContext();
+        ctx.scan("ru.com.melt.info.configuration");
+        ctx.setServletContext(container);
+        ctx.refresh();
+        return ctx;
     }
 
-    private void registerFilters(ServletContext servletContext, WebApplicationContext context) {
-        registerFilter(servletContext, new CharacterEncodingFilter("UTF-8", true));
-        registerFilter(servletContext, context.getBean(ApplicationFilter.class));
-        registerFilter(servletContext, buildConfigurableSiteMeshFilter(), "sitemesh");
+    private void registerFilters(ServletContext container, WebApplicationContext ctx) {
+        registerFilter(container, ctx.getBean(ResumeFilter.class));
+        registerFilter(container, new CharacterEncodingFilter("UTF-8", true));
+        registerFilter(container, buildConfigurableSiteMeshFilter(), "sitemesh");
     }
 
-
-    private void registerFilter(ServletContext servletContext, Filter filter, String... filterNames) {
+    private void registerFilter(ServletContext container, Filter filter, String... filterNames) {
         String filterName = filterNames.length > 0 ? filterNames[0] : filter.getClass().getSimpleName();
-        servletContext.addFilter(filterName, filter).addMappingForUrlPatterns(null, true, "/*");
+        container.addFilter(filterName, filter).addMappingForUrlPatterns(null, true, "/*");
     }
 
-    private void registerServlet(ServletContext container, Servlet servletInstance, String url) {
-        ServletRegistration.Dynamic servlet = container.addServlet(servletInstance.getClass().getSimpleName(), servletInstance);
+    private void registerSpringMVCDispatcherServlet(ServletContext container, WebApplicationContext ctx) {
+        ServletRegistration.Dynamic servlet = container.addServlet("dispatcher", new DispatcherServlet(ctx));
         servlet.setLoadOnStartup(1);
-        servlet.addMapping(url);
+        servlet.addMapping("/");
     }
 
-    private Filter buildConfigurableSiteMeshFilter() {
+    private ConfigurableSiteMeshFilter buildConfigurableSiteMeshFilter() {
         return new ConfigurableSiteMeshFilter() {
             @Override
             protected void applyCustomConfiguration(SiteMeshFilterBuilder builder) {
-                builder.addDecoratorPath("/*", "/WEB-INF/template/page-template.jsp");
+                builder
+                        .addDecoratorPath("/*", "/WEB-INF/template/page-template.jsp");
             }
         };
     }
