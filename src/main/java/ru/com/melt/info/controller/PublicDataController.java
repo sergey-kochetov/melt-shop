@@ -21,4 +21,9 @@ public class PublicDataController {
         model.addAttribute("fullName", newFullName);
         return "profile";
     }
+
+    @GetMapping(value = "/error")
+    public String getError() {
+        return "error";
+    }
 }
