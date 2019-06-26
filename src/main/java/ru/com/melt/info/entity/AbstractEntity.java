@@ -1,8 +1,10 @@
 package ru.com.melt.info.entity;
 
+import ru.com.melt.info.model.AbstractModel;
+
 import java.io.Serializable;
 
-public abstract class AbstractEntity<T> implements Serializable {
+public abstract class AbstractEntity<T> extends AbstractModel implements Serializable {
     private static final long serialVersionUID = 1L;
 
     public abstract T getId();

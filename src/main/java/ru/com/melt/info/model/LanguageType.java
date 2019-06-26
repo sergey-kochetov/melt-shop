@@ -1,10 +1,14 @@
 package ru.com.melt.info.model;
 
 import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
 
 public enum LanguageType {
+
     ALL,
+
     SPOKEN,
+
     WRITING;
 
     public String getDbValue() {
@@ -17,16 +21,16 @@ public enum LanguageType {
         } else if (this == WRITING) {
             return SPOKEN;
         } else {
-            throw new IllegalArgumentException(this + " does not have reverse type");
+            throw new IllegalArgumentException(this+" does not have reverse type");
         }
     }
 
-    public class PersistJPAConverter implements AttributeConverter<LanguageType, String> {
+    @Converter
+    public static class PersistJPAConverter implements AttributeConverter<LanguageType, String> {
         @Override
-        public String convertToDatabaseColumn(LanguageType languageType) {
-            return languageType.getDbValue();
+        public String convertToDatabaseColumn(LanguageType attribute) {
+            return attribute.getDbValue();
         }
-
         @Override
         public LanguageType convertToEntityAttribute(String dbValue) {
             return LanguageType.valueOf(dbValue.toUpperCase());
