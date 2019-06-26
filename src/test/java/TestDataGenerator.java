@@ -39,8 +39,8 @@ public class TestDataGenerator {
 
     // JDBC setting for database
     private static final String JDBC_URL = "jdbc:postgresql://localhost/info";
-    private static final String JDBC_USERNAME = "info";
-    private static final String JDBC_PASSWORD = "info";
+    private static final String JDBC_USERNAME = "postgres";
+    private static final String JDBC_PASSWORD = "postgres";
 
     private static final String PHOTO_PATH = "external/test-data/photos/";
     private static final String CERTIFICATES_PATH = "external/test-data/cert/";
@@ -85,12 +85,12 @@ public class TestDataGenerator {
         try (Connection c = DriverManager.getConnection(JDBC_URL, JDBC_USERNAME, JDBC_PASSWORD)) {
             c.setAutoCommit(false);
             clearDb(c);
+            insertSkillCategories(c);
             for (Profile p : profiles) {
                 ProfileConfig profileConfig = profileConfigs.get(r.nextInt(profileConfigs.size()));
                 createProfile(c, p, profileConfig, certificates);
                 System.out.println("Created profile for " + p.firstName + " " + p.lastName);
             }
-            insertSkillCategories(c);
             c.commit();
             System.out.println("Data generated successful");
         }
@@ -324,6 +324,7 @@ public class TestDataGenerator {
                 ps.setNull(4, Types.DATE);
             } else {
                 ps.setDate(4, finish);
+                //ps.setNull(4, Types.DATE);
             }
             ps.executeUpdate();
             ps.close();

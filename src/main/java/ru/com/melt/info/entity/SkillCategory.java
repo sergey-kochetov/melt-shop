@@ -7,16 +7,15 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "skill_category")
-//@Data
-public class SkillCategory {
+public class SkillCategory extends AbstractEntity<Long> {
+    private static final long serialVersionUID = 1L;
+
     @Id
+    @Column
     private Long id;
 
     @Column(nullable = false, length = 50)
     private String category;
-
-    public SkillCategory() {
-    }
 
     public Long getId() {
         return id;
