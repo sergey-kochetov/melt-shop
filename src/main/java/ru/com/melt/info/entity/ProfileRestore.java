@@ -1,50 +1,55 @@
 package ru.com.melt.info.entity;
 
-import org.springframework.data.annotation.Id;
-
-import javax.persistence.*;
 import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "profile_restore")
 public class ProfileRestore extends AbstractEntity<Long> implements Serializable {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @Id
-    @Column(unique = true, nullable = false)
-    private Long id;
+	@Id
+	@Column(unique = true, nullable = false)
+	private Long id;
+	
+	@OneToOne(fetch=FetchType.LAZY, optional=false)
+	@JoinColumn(name="id", nullable=false)
+	private Profile profile;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id", nullable = false)
-    private Profile profile;
+	@Column(nullable = false, unique = true, length = 100)
+	private String token;
+	
+	public ProfileRestore() {
+	}
 
-    @Column(nullable = false, unique = true, length = 100)
-    private String token;
+	public Long getId() {
+		return this.id;
+	}
 
-    public ProfileRestore() {
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public Long getId() {
-        return this.id;
-    }
+	public Profile getProfile() {
+		return profile;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setProfile(Profile profile) {
+		this.profile = profile;
+	}
 
-    public Profile getProfile() {
-        return profile;
-    }
+	public String getToken() {
+		return token;
+	}
 
-    public void setProfile(Profile profile) {
-        this.profile = profile;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
+	public void setToken(String token) {
+		this.token = token;
+	}
 }

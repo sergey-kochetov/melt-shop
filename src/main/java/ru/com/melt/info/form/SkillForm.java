@@ -1,27 +1,29 @@
 package ru.com.melt.info.form;
 
-import ru.com.melt.info.entity.Skill;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.com.melt.info.entity.Skill;
+
 public class SkillForm implements Serializable {
-    private static final long serialVersionUID = 1L;
-    private List<Skill> items = new ArrayList<>();
+	private static final long serialVersionUID = 4135568197764740034L;
+	private List<Skill> items = new ArrayList<>();
+	
+	public SkillForm() {
+		super();
+	}
 
-    public SkillForm() {
-    }
+	public SkillForm(List<Skill> items) {
+		super();
+		this.items = items;
+	}
 
-    public SkillForm(List<Skill> items) {
-        this.items = items;
-    }
+	public List<Skill> getItems() {
+		return items;
+	}
 
-    public List<Skill> getItems() {
-        return items;
-    }
-
-    public void setItems(List<Skill> items) {
-        this.items = items;
-    }
+	public void setItems(List<Skill> items) {
+		this.items = items;
+	}
 }

@@ -13,28 +13,28 @@ import org.springframework.web.servlet.view.JstlView;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan({"ru.com.melt.info.controller"})
+@ComponentScan({ "ru.com.melt.info.controller" })
 public class MVCConfig extends WebMvcConfigurerAdapter {
+	
+	@Bean
+	public ViewResolver viewResolver() {
+		InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+		viewResolver.setViewClass(JstlView.class);
+		viewResolver.setPrefix("/WEB-INF/JSP/");
+		viewResolver.setSuffix(".jsp");
+		return viewResolver;
+	}
 
-    @Bean
-    public ViewResolver viewResolver() {
-        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-        viewResolver.setViewClass(JstlView.class);
-        viewResolver.setPrefix("/WEB-INF/JSP/");
-        viewResolver.setSuffix(".jsp");
-        return viewResolver;
-    }
-
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/static/**").addResourceLocations("/static/");
-        registry.addResourceHandler("/media/**").addResourceLocations("/media/");
-        registry.addResourceHandler("/favicon.ico").addResourceLocations("/favicon.ico");
-    }
-
-    @Bean
-    public CommonsMultipartResolver multipartResolver() {
-        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-        return multipartResolver;
-    }
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("/static/**").addResourceLocations("/static/");
+		registry.addResourceHandler("/media/**").addResourceLocations("/media/");
+		registry.addResourceHandler("/favicon.ico").addResourceLocations("/favicon.ico");
+	}
+	
+	@Bean
+	public CommonsMultipartResolver multipartResolver(){
+		CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+		return multipartResolver;
+	}
 }

@@ -10,20 +10,20 @@ import org.springframework.core.io.Resource;
 import java.io.IOException;
 
 @Configuration
-@ComponentScan({"ru.com.melt.info.service.impl",
-                "ru.com.melt.info.controller",
-                "ru.com.melt.info.filter",
-                "ru.com.melt.info.listener"})
+@ComponentScan({ "ru.com.melt.info.service.impl",
+				 "ru.com.melt.info.controller",
+				 "ru.com.melt.info.filter",
+				 "ru.com.melt.info.listener"})
 public class ServiceConfig {
 
-    @Bean
-    public static PropertySourcesPlaceholderConfigurer placeholderConfigurer() throws IOException {
-        PropertySourcesPlaceholderConfigurer conf = new PropertySourcesPlaceholderConfigurer();
-        conf.setLocations(getResources());
-        return conf;
-    }
-
-    private static Resource[] getResources() {
-        return new Resource[] {new ClassPathResource("application.properties")};
-    }
+	@Bean
+	public static PropertySourcesPlaceholderConfigurer placeHolderConfigurer() throws IOException {
+		PropertySourcesPlaceholderConfigurer conf = new PropertySourcesPlaceholderConfigurer();
+		conf.setLocations(getResources());
+		return conf;
+	}
+	
+	private static Resource[] getResources(){
+		return new Resource[] {new ClassPathResource("application.properties")};
+	}
 }

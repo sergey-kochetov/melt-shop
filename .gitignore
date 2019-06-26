@@ -1,5 +1,6 @@
 HELP.md
 /target/
+/external/
 /src/main/webapp/media
 !.mvn/wrapper/maven-wrapper.jar
 
