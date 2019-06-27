@@ -37,7 +37,7 @@ public class EditProfileController {
             return gotoSkillsJSP(model);
         }
         editProfileService.updateSkill(SecurityUtil.getCurrentIdProfile(), form.getItems());
-        return "redirect:/aly-dutta";
+        return "redirect:/welcome";
     }
 
     private String gotoSkillsJSP(Model model) {
