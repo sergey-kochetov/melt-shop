@@ -190,6 +190,8 @@ public class Profile extends AbstractEntity<Long> implements Serializable {
 
 	public void setCertificates(List<Certificate> certificates) {
 		this.certificates = certificates;
+		updateListSetProfile(this.certificates);
+
 	}
 
 	public List<Education> getEducations() {
@@ -198,6 +200,7 @@ public class Profile extends AbstractEntity<Long> implements Serializable {
 
 	public void setEducations(List<Education> educations) {
 		this.educations = educations;
+		updateListSetProfile(this.educations);
 	}
 
 	public List<Hobby> getHobbies() {
@@ -206,6 +209,7 @@ public class Profile extends AbstractEntity<Long> implements Serializable {
 
 	public void setHobbies(List<Hobby> hobbies) {
 		this.hobbies = hobbies;
+		updateListSetProfile(this.hobbies);
 	}
 
 	public List<Language> getLanguages() {
@@ -214,6 +218,7 @@ public class Profile extends AbstractEntity<Long> implements Serializable {
 
 	public void setLanguages(List<Language> languages) {
 		this.languages = languages;
+		updateListSetProfile(this.languages);
 	}
 
 	public List<Practic> getPractics() {
@@ -222,6 +227,7 @@ public class Profile extends AbstractEntity<Long> implements Serializable {
 
 	public void setPractics(List<Practic> practics) {
 		this.practics = practics;
+		updateListSetProfile(this.practics);
 	}
 
 	public List<Skill> getSkills() {
@@ -230,6 +236,7 @@ public class Profile extends AbstractEntity<Long> implements Serializable {
 
 	public void setSkills(List<Skill> skills) {
 		this.skills = skills;
+		updateListSetProfile(this.skills);
 	}
 
 	public List<Course> getCourses() {
@@ -238,6 +245,7 @@ public class Profile extends AbstractEntity<Long> implements Serializable {
 
 	public void setCourses(List<Course> courses) {
 		this.courses = courses;
+		updateListSetProfile(this.courses);
 	}
 
 	public String getLargePhoto() {
@@ -343,5 +351,13 @@ public class Profile extends AbstractEntity<Long> implements Serializable {
 
 	public void setContacts(Contacts contacts) {
 		this.contacts = contacts;
+	}
+
+	private void updateListSetProfile(List<? extends ProfileEntity> list) {
+		if (list != null) {
+			for (ProfileEntity entity : list) {
+				entity.setProfile(this);
+			}
+		}
 	}
 }

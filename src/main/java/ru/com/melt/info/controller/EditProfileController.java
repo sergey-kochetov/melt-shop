@@ -12,38 +12,40 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import ru.com.melt.info.form.SkillForm;
 import ru.com.melt.info.repository.storage.ProfileRepository;
 import ru.com.melt.info.repository.storage.SkillCategoryRepository;
+import ru.com.melt.info.service.EditProfileService;
+import ru.com.melt.info.util.SecurityUtil;
+
+import javax.validation.Valid;
 
 @Controller
 public class EditProfileController {
-	
-	@Autowired
-	private SkillCategoryRepository skillCategoryRepository;
-	
-	@Autowired
-	private ProfileRepository profileRepository;
-	
-	@RequestMapping(value="/edit", method=RequestMethod.GET)
-	public String getEditProfile(){
-		return "edit";
-	}
-	
-	@RequestMapping(value = "/edit/skills", method = RequestMethod.GET)
-	public String getEditTechSkills(Model model) {
-		model.addAttribute("skillForm", new SkillForm(profileRepository.findOne(1L).getSkills()));
-		return gotoSkillsJSP(model);
-	}
 
-	@RequestMapping(value = "/edit/skills", method = RequestMethod.POST)
-	public String saveEditTechSkills(@ModelAttribute("skillForm") SkillForm form, BindingResult bindingResult, Model model) {
-		if (bindingResult.hasErrors()) {
-			return gotoSkillsJSP(model);
+    @Autowired
+    private EditProfileService editProfileService;
+
+    @RequestMapping(value = "/edit", method = RequestMethod.GET)
+    public String getEditProfile() {
+        return "edit";
+    }
+
+    @RequestMapping(value = "/edit/skills", method = RequestMethod.GET)
+    public String getEditTechSkills(Model model) {
+        model.addAttribute("skillForm", new SkillForm(editProfileService
+                .listSkills(SecurityUtil.getCurrentIdProfile())));
+        return gotoSkillsJSP(model);
+    }
+
+    @RequestMapping(value = "/edit/skills", method = RequestMethod.POST)
+    public String saveEditTechSkills(@Valid @ModelAttribute("skillForm") SkillForm form, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return gotoSkillsJSP(model);
         }
-		//TODO Update skills 
-		return "redirect:/mike-ross";
-	}
-	
-	private String gotoSkillsJSP(Model model){
-		model.addAttribute("skillCategories", skillCategoryRepository.findAll(new Sort("id")));
-		return "edit/skills";
-	}
+        editProfileService.updateSkill(SecurityUtil.getCurrentIdProfile(), form.getItems());
+        return "redirect:/mike-ross";
+    }
+
+    private String gotoSkillsJSP(Model model) {
+        model.addAttribute("skillCategories", editProfileService.listSkillCategories());
+        return "edit/skills";
+    }
 }

@@ -6,8 +6,12 @@ import java.util.List;
 
 import ru.com.melt.info.entity.Skill;
 
+import javax.validation.Valid;
+
 public class SkillForm implements Serializable {
 	private static final long serialVersionUID = 4135568197764740034L;
+
+	@Valid
 	private List<Skill> items = new ArrayList<>();
 	
 	public SkillForm() {

@@ -9,16 +9,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.com.melt.info.entity.Profile;
 import ru.com.melt.info.repository.storage.ProfileRepository;
+import ru.com.melt.info.service.FindProfileService;
 
 @Controller
 public class PublicDataController {
 	
 	@Autowired
-	private ProfileRepository profileRepository;
+	private FindProfileService findProfileService;
 
 	@RequestMapping(value="/{uid}", method=RequestMethod.GET)
 	public String getProfile(@PathVariable("uid") String uid, Model model){
-		Profile profile = profileRepository.findByUid(uid);
+		Profile profile = findProfileService.findByUid(uid);
 		if(profile == null) {
 			return "profile";
 		}

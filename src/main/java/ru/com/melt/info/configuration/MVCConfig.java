@@ -50,6 +50,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
 		return validatorFactoryBean;
 	}
 
+	@Bean
 	public MessageSource messageSource() {
 		ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
 		messageSource.setBasename("i18n.messages");
