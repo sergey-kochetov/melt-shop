@@ -21,9 +21,10 @@ public class PublicDataController {
 	public String getProfile(@PathVariable("uid") String uid, Model model){
 		Profile profile = findProfileService.findByUid(uid);
 		if(profile == null) {
-			return "profile";
+			return "profile";//"profile-not-found";
 		}
 		model.addAttribute("profile", profile);
+		model.addAttribute("showEdit", false);
 		return "profile";
 	}
 	

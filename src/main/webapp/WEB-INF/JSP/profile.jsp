@@ -4,7 +4,7 @@
 <div class="container">
 	<div class="row">
 		<div class="col-md-4 col-sm-6">
-			<resume:profile-main />
+			<resume:profile-main profile="${profile }" showEdit="${showEdit }"/>
 			<div class="hidden-xs">
 				<resume:profile-languages />
 				<resume:profile-hobbies />

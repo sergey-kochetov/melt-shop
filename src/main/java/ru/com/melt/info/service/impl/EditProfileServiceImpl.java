@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.com.melt.info.entity.Profile;
 import ru.com.melt.info.entity.Skill;
@@ -19,6 +20,7 @@ import ru.com.melt.info.util.DataUtil;
 
 import java.util.List;
 
+@Service
 public class EditProfileServiceImpl implements EditProfileService {
     private static final Logger LOGGER = LoggerFactory.getLogger(EditProfileServiceImpl.class);
 
