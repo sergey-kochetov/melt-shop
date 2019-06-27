@@ -8,7 +8,6 @@
 	<div class="panel-heading">
 		<h3 class="panel-title">
 			<i class="fa fa-bullseye"></i> Objective
-			<a class="edit-block" href="/edit#inputObjective">Edit</a>
 			<c:if test="${showEdit}"><a href="/edit#inputObjective" class="edit-block">Edit</a></c:if>
 		</h3>
 	</div>
