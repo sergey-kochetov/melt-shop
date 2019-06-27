@@ -24,7 +24,7 @@ public class PublicDataController {
 			return "profile";//"profile-not-found";
 		}
 		model.addAttribute("profile", profile);
-		model.addAttribute("showEdit", false);
+		model.addAttribute("showEdit", true);
 		return "profile";
 	}
 	
