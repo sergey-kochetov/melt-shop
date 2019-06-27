@@ -3,7 +3,10 @@ package ru.com.melt.info.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +23,8 @@ public class PublicDataController {
 
 	@RequestMapping(value = { "/welcome" }, method=RequestMethod.GET)
 	public String listAll(Model model) {
-		Page<Profile> profiles = findProfileService.findAll(new PageRequest(0, 10, new Sort("id")));
+		Page<Profile> profiles = findProfileService.findAll(
+		        new PageRequest(0, 5, new Sort("id")));
 		model.addAttribute("profiles", profiles.getContent());
 		model.addAttribute("page", profiles);
 		return "welcome";
@@ -41,4 +45,12 @@ public class PublicDataController {
 	public String getError(){
 		return "error";
 	}
+
+	@RequestMapping(value = "/fragment/more", method = RequestMethod.GET)
+    public String moreProfiles(Model model,
+                               @PageableDefault(size = 5) @SortDefault(sort = "id")Pageable pageable) {
+	    Page<Profile> profiles = findProfileService.findAll(pageable);
+	    model.addAttribute("profiles", profiles.getContent());
+	    return "fragment/profile-items";
+    }
 }
