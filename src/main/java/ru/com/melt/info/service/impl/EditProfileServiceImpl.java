@@ -1,6 +1,7 @@
 package ru.com.melt.info.service.impl;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,9 @@ import ru.com.melt.info.repository.storage.ProfileRepository;
 import ru.com.melt.info.repository.storage.SkillCategoryRepository;
 import ru.com.melt.info.service.EditProfileService;
 import ru.com.melt.info.util.DataUtil;
+import ru.com.melt.info.util.SecurityUtil;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -131,6 +134,95 @@ public class EditProfileServiceImpl implements EditProfileService {
             profile.setCertificates(certificates);
             profileRepository.save(profile);
         }
+    }
+
+    @Override
+    public List<Course> findCoursesById(long idProfile) {
+        return profileRepository.findOne(idProfile).getCourses();
+    }
+
+    @Override
+    @Transactional
+    public void updateCourses(long idProfile, List<Course> courses) {
+        Profile profile = profileRepository.findOne(idProfile);
+        if (CollectionUtils.isEqualCollection(courses, profile.getCourses())) {
+            LOGGER.debug("Profile courses: nothing to update");
+        } else {
+            profile.setCourses(courses);
+            profileRepository.save(profile);
+        }
+    }
+
+    @Override
+    public List<Education> findEducationById(long idProfile) {
+        return profileRepository.findOne(idProfile).getEducations();
+    }
+
+    @Override
+    @Transactional
+    public void updateEducation(long idProfile, List<Education> educations) {
+        Profile profile = profileRepository.findOne(idProfile);
+        if (CollectionUtils.isEqualCollection(educations, profile.getCourses())) {
+            LOGGER.debug("Profile educations: nothing to update");
+        } else {
+            profile.setEducations(educations);
+            profileRepository.save(profile);
+        }
+    }
+
+    @Override
+    public List<Language> findLanguageById(long idProfile) {
+        return profileRepository.findOne(idProfile).getLanguages();
+    }
+
+    @Override
+    public void updateLanguage(long idProfile, List<Language> languages) {
+        Profile profile = profileRepository.findOne(idProfile);
+        if (CollectionUtils.isEqualCollection(languages, profile.getCourses())) {
+            LOGGER.debug("Profile languages: nothing to update");
+        } else {
+            profile.setLanguages(languages);
+            profileRepository.save(profile);
+        }
+    }
+
+    @Override
+    public List<Hobby> findHobbiesWithProfileSelected(long idProfile) {
+        List<Hobby> profileHobbies = profileRepository.findOne(idProfile).getHobbies();
+        List<Hobby> hobbies = new ArrayList<>();
+        for (Hobby h : profileRepository.findOne(SecurityUtil.getCurrentIdProfile()).getHobbies()) {
+            boolean selected = profileHobbies.contains(h);
+            hobbies.add(new Hobby(h.getName(), selected));
+        }
+        return hobbies;
+    }
+
+    @Override
+    @Transactional
+    public void updateHobbies(long idProfile, List<String> hobbies) {
+
+    }
+
+    @Override
+    public String findInfoById(long idProfile) {
+        return profileRepository.findOne(idProfile).getInfo();
+    }
+
+    @Override
+    @Transactional
+    public void updateInfo(long idProfile, String info) {
+        Profile loadedProfile = profileRepository.findOne(idProfile);
+        if (!StringUtils.equals(loadedProfile.getInfo(), info)) {
+            loadedProfile.setInfo(info);
+            profileRepository.save(loadedProfile);
+        } else {
+            LOGGER.debug("Profile info not updated");
+        }
+    }
+
+    @Override
+    public Profile findProfileById(long idProfile) {
+        return profileRepository.findOne(idProfile);
     }
 
     private void registerUpdateIndexProfileSkillsIfTransactionSuccess(long idProfile, List<Skill> updateSkills) {

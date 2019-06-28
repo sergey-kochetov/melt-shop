@@ -26,4 +26,26 @@ public interface EditProfileService {
     List<Certificate> findCertificatesById(long idProfile);
 
     void updateCertificates(long idProfile, List<Certificate> certificates);
+
+    List<Course> findCoursesById(long idProfile);
+
+    void updateCourses(long idProfile, List<Course> courses);
+
+    List<Education> findEducationById(long idProfile);
+
+    void updateEducation(long idProfile, List<Education> educations);
+
+    List<Language> findLanguageById(long idProfile);
+
+    void updateLanguage(long idProfile, List<Language> languages);
+
+    List<Hobby> findHobbiesWithProfileSelected(long idProfile);
+
+    void updateHobbies(long idProfile, List<String> hobbies);
+
+    String findInfoById(long idProfile);
+
+    void updateInfo(long idProfile, String info);
+
+    Profile findProfileById(long idProfile);
 }
