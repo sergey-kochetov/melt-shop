@@ -3,6 +3,8 @@
 <%@ taglib prefix="form"   	uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="resume" 	tagdir="/WEB-INF/tags"%>
 
+<resume:edit-tab-header selected="skills" />
+
 <div class="panel panel-default">
 	<div class="panel-body">
 		<h4 class="data-header">Технические навыки во фреймворках и технологиях</h4>

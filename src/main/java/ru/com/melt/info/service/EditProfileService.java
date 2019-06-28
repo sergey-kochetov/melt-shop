@@ -1,9 +1,6 @@
 package ru.com.melt.info.service;
 
-import ru.com.melt.info.entity.Contacts;
-import ru.com.melt.info.entity.Profile;
-import ru.com.melt.info.entity.Skill;
-import ru.com.melt.info.entity.SkillCategory;
+import ru.com.melt.info.entity.*;
 import ru.com.melt.info.form.SignUpForm;
 
 import java.util.List;
@@ -21,4 +18,12 @@ public interface EditProfileService {
     Contacts findContactsById(long idProfile);
 
     void updateContacts(long idProfile, Contacts contacts);
+
+    List<Practic> findPracticsById(long idProfile);
+
+    void updatePractics(long idProfile, List<Practic> practics);
+
+    List<Certificate> findCertificatesById(long idProfile);
+
+    void updateCertificates(long idProfile, List<Certificate> certificates);
 }

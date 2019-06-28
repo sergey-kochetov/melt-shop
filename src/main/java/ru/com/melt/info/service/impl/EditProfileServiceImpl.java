@@ -10,10 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
-import ru.com.melt.info.entity.Contacts;
-import ru.com.melt.info.entity.Profile;
-import ru.com.melt.info.entity.Skill;
-import ru.com.melt.info.entity.SkillCategory;
+import ru.com.melt.info.entity.*;
 import ru.com.melt.info.exception.CantCompleteClientRequestException;
 import ru.com.melt.info.form.SignUpForm;
 import ru.com.melt.info.repository.search.ProfileSearchRepository;
@@ -77,7 +74,6 @@ public class EditProfileServiceImpl implements EditProfileService {
         Profile profile = profileRepository.findOne(idProfile);
         if (CollectionUtils.isEqualCollection(updateSkills, profile.getSkills())) {
             LOGGER.debug("Profile skills: nothing to update");
-            return;
         } else {
             profile.setSkills(updateSkills);
             profileRepository.save(profile);
@@ -101,6 +97,40 @@ public class EditProfileServiceImpl implements EditProfileService {
             LOGGER.debug("Profile contacts not updated");
         }
 
+    }
+
+    @Override
+    public List<Practic> findPracticsById(long idProfile) {
+        return profileRepository.findOne(idProfile).getPractics();
+    }
+
+    @Override
+    @Transactional
+    public void updatePractics(long idProfile, List<Practic> practics) {
+        Profile profile = profileRepository.findOne(idProfile);
+        if (CollectionUtils.isEqualCollection(practics, profile.getPractics())) {
+            LOGGER.debug("Profile practics: nothing to update");
+        } else {
+            profile.setPractics(practics);
+            profileRepository.save(profile);
+        }
+    }
+
+    @Override
+    public List<Certificate> findCertificatesById(long idProfile) {
+        return profileRepository.findOne(idProfile).getCertificates();
+    }
+
+    @Override
+    @Transactional
+    public void updateCertificates(long idProfile, List<Certificate> certificates) {
+        Profile profile = profileRepository.findOne(idProfile);
+        if (CollectionUtils.isEqualCollection(certificates, profile.getCertificates())) {
+            LOGGER.debug("Profile certificates: nothing to update");
+        } else {
+            profile.setCertificates(certificates);
+            profileRepository.save(profile);
+        }
     }
 
     private void registerUpdateIndexProfileSkillsIfTransactionSuccess(long idProfile, List<Skill> updateSkills) {

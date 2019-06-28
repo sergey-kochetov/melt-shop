@@ -3,6 +3,8 @@
 <%@ taglib prefix="form"   	uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="resume" 	tagdir="/WEB-INF/tags"%>
 
+<resume:edit-tab-header selected="contacts" />
+
 <div class="panel panel-default">
 	<div class="panel-body">
 		<h4 class="data-header">Дополнительные контакты: skype, ссылки на социальные профили, и т.д. </h4>
