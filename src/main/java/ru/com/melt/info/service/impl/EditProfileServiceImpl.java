@@ -8,16 +8,20 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationAdapter;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import ru.com.melt.info.entity.Profile;
 import ru.com.melt.info.entity.Skill;
 import ru.com.melt.info.entity.SkillCategory;
 import ru.com.melt.info.exception.CantCompleteClientRequestException;
 import ru.com.melt.info.form.SignUpForm;
+import ru.com.melt.info.repository.search.ProfileSearchRepository;
 import ru.com.melt.info.repository.storage.ProfileRepository;
 import ru.com.melt.info.repository.storage.SkillCategoryRepository;
 import ru.com.melt.info.service.EditProfileService;
 import ru.com.melt.info.util.DataUtil;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -29,6 +33,9 @@ public class EditProfileServiceImpl implements EditProfileService {
 
     @Autowired
     private SkillCategoryRepository skillCategoryRepository;
+
+    @Autowired
+    private ProfileSearchRepository profileSearchRepository;
 
     @Value("${generate.uid.alphabet}")
     private String generateUidAlphabet;
@@ -49,6 +56,7 @@ public class EditProfileServiceImpl implements EditProfileService {
         profile.setPassword(signUpForm.getPassword());
         profile.setCompleted(false);
         profileRepository.save(profile);
+        registerCreateIndexProfileIfTransactionSuccess(profile);
         return null;
     }
 
@@ -72,7 +80,25 @@ public class EditProfileServiceImpl implements EditProfileService {
         } else {
             profile.setSkills(updateSkills);
             profileRepository.save(profile);
+            registerUpdateIndexProfileSkillsIfTransactionSuccess(idProfile, updateSkills);
         }
+    }
+
+    private void registerUpdateIndexProfileSkillsIfTransactionSuccess(long idProfile, List<Skill> updateSkills) {
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
+            @Override
+            public void afterCommit() {
+                LOGGER.info("Profile skills updated");
+                updateIndexProfileSkills(idProfile, updateSkills);
+            }
+        });
+    }
+
+    private void updateIndexProfileSkills(long idProfile, List<Skill> updateSkills) {
+        Profile profile = profileSearchRepository.findOne(idProfile);
+        profile.setSkills(updateSkills);
+        profileSearchRepository.save(profile);
+        LOGGER.info("Profile skills index updated");
     }
 
     private String generateProfileUid(SignUpForm signUpForm) {
@@ -86,5 +112,21 @@ public class EditProfileServiceImpl implements EditProfileService {
             }
         }
         return uid;
+    }
+
+    private void registerCreateIndexProfileIfTransactionSuccess(Profile profile) {
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
+            @Override
+            public void afterCommit() {
+                LOGGER.info("New profile created: {}", profile.getUid());
+                profile.setCertificates(Collections.EMPTY_LIST);
+                profile.setPractics(Collections.EMPTY_LIST);
+                profile.setLanguages(Collections.EMPTY_LIST);
+                profile.setSkills(Collections.EMPTY_LIST);
+                profile.setCourses(Collections.EMPTY_LIST);
+                profileSearchRepository.save(profile);
+                LOGGER.info("New profile index created: {}", profile.getUid());
+            }
+        });
     }
 }

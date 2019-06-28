@@ -1,5 +1,6 @@
 package ru.com.melt.info.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import ru.com.melt.info.annotation.constraints.EnglishLanguage;
 
 import java.io.Serializable;
@@ -40,6 +41,7 @@ public class Skill extends AbstractEntity<Long> implements Serializable, Profile
 	//bi-directional many-to-one association to Profile
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="id_profile", nullable=false)
+	@JsonIgnore
 	private Profile profile;
 
 	public Skill() {

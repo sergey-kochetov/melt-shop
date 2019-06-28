@@ -18,13 +18,14 @@ import ru.com.melt.info.service.FindProfileService;
 @Controller
 public class PublicDataController {
 	
+	private static final int MAX_SIZE_DOWNLOAD = 5;
 	@Autowired
 	private FindProfileService findProfileService;
 
 	@RequestMapping(value = { "/welcome" }, method=RequestMethod.GET)
 	public String listAll(Model model) {
 		Page<Profile> profiles = findProfileService.findAll(
-		        new PageRequest(0, 5, new Sort("id")));
+		        new PageRequest(0, MAX_SIZE_DOWNLOAD, new Sort("id")));
 		model.addAttribute("profiles", profiles.getContent());
 		model.addAttribute("page", profiles);
 		return "welcome";
@@ -48,7 +49,7 @@ public class PublicDataController {
 
 	@RequestMapping(value = "/fragment/more", method = RequestMethod.GET)
     public String moreProfiles(Model model,
-                               @PageableDefault(size = 5) @SortDefault(sort = "id")Pageable pageable) {
+                               @PageableDefault(size = MAX_SIZE_DOWNLOAD) @SortDefault(sort = "id")Pageable pageable) {
 	    Page<Profile> profiles = findProfileService.findAll(pageable);
 	    model.addAttribute("profiles", profiles.getContent());
 	    return "fragment/profile-items";

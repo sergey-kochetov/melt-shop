@@ -18,11 +18,14 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.joda.time.LocalDate;
 import org.joda.time.Years;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 @Entity
 @Table(name = "profile")
+@Document(indexName = "profile")
 public class Profile extends AbstractEntity<Long> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -51,15 +54,18 @@ public class Profile extends AbstractEntity<Long> implements Serializable {
 	private String objective;
 
 	@Column(name = "large_photo", length = 255)
+	@JsonIgnore
 	private String largePhoto;
 
 	@Column(name = "small_photo", length = 255)
 	private String smallPhoto;
 
 	@Column(length = 20)
+	@JsonIgnore
 	private String phone;
 
 	@Column(length = 100)
+	@JsonIgnore
 	private String email;
 	
 	@Column
@@ -72,12 +78,15 @@ public class Profile extends AbstractEntity<Long> implements Serializable {
 	private String uid;
 	
 	@Column(nullable = false, length = 100)
+	@JsonIgnore
 	private String password;
 	
 	@Column(nullable = false)
+	@JsonIgnore
 	private boolean completed;
 	
 	@Column(insertable=false)
+	@JsonIgnore
 	private Timestamp created;
 
 	@OneToMany(mappedBy = "profile", cascade={CascadeType.MERGE, CascadeType.PERSIST})
@@ -85,10 +94,12 @@ public class Profile extends AbstractEntity<Long> implements Serializable {
 
 	@OneToMany(mappedBy = "profile", cascade={CascadeType.MERGE, CascadeType.PERSIST})
 	@OrderBy("finishYear DESC, beginYear DESC, id DESC")
+	@JsonIgnore
 	private List<Education> educations;
 
 	@OneToMany(mappedBy = "profile", cascade={CascadeType.MERGE, CascadeType.PERSIST})
 	@OrderBy("name ASC")
+	@JsonIgnore
 	private List<Hobby> hobbies;
 
 	@OneToMany(mappedBy = "profile", cascade={CascadeType.MERGE, CascadeType.PERSIST})
