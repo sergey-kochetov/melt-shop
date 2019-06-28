@@ -1,8 +1,12 @@
 package ru.com.melt.info.util;
 
 import org.apache.commons.lang.WordUtils;
+import org.springframework.util.ReflectionUtils;
+import ru.com.melt.info.entity.Contacts;
 import ru.com.melt.info.form.SignUpForm;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.util.Random;
 
 public class DataUtil {
@@ -33,4 +37,44 @@ public class DataUtil {
         return uid.toString();
     }
 
+    public static <T extends Annotation> int copyFields(final Object from, Object to) {
+        return copyFields(from, to, null);
+    }
+
+    private static <T extends Annotation> int copyFields(Object from, Object to, Class<T> annotation) {
+        final CopiedFieldsCounter copiedFieldsCounter = new CopiedFieldsCounter();
+        ReflectionUtils.doWithFields(to.getClass(), field -> {
+            ReflectionUtils.makeAccessible(field);
+            copyAccessibleField(field, from, to, copiedFieldsCounter);
+        }, createFieldFilter(annotation));
+        return copiedFieldsCounter.counter;
+    }
+
+    private static void copyAccessibleField(Field field, Object from, Object to, CopiedFieldsCounter copiedFieldsCounter) throws IllegalAccessException {
+        Object fromValue = field.get(from);
+        Object toValue = field.get(to);
+        if (fromValue == null) {
+            if (toValue != null) {
+                field.set(to, null);
+                copiedFieldsCounter.counter++;
+            }
+        } else {
+            if (!fromValue.equals(toValue)) {
+                field.set(to, fromValue);
+                copiedFieldsCounter.counter++;
+            }
+        }
+    }
+
+    private static <T extends Annotation> ReflectionUtils.FieldFilter createFieldFilter(Class<T> annotation) {
+        if (annotation == null) {
+            return ReflectionUtils.COPYABLE_FIELDS;
+        } else {
+            return new org.springframework.data.util.ReflectionUtils.AnnotationFieldFilter(annotation);
+        }
+    }
+
+    private static final class CopiedFieldsCounter {
+        private int counter;
+    }
 }

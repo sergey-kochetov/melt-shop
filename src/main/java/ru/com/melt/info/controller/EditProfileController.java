@@ -7,6 +7,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import ru.com.melt.info.entity.Contacts;
 import ru.com.melt.info.form.SkillForm;
 import ru.com.melt.info.service.EditProfileService;
 import ru.com.melt.info.util.SecurityUtil;
@@ -21,7 +22,7 @@ public class EditProfileController {
 
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String getEditProfile() {
-        return "edit";
+        return "redirect:/edit/contacts";
     }
 
     @RequestMapping(value = "/edit/skills", method = RequestMethod.GET)
@@ -38,6 +39,22 @@ public class EditProfileController {
         }
         editProfileService.updateSkill(SecurityUtil.getCurrentIdProfile(), form.getItems());
         return "redirect:/welcome";
+    }
+
+    @RequestMapping(value = "/edit/contacts", method = RequestMethod.GET)
+    public String getEditContacts(Model model) {
+        model.addAttribute("contactsForm", editProfileService
+                .findContactsById(SecurityUtil.getCurrentIdProfile()));
+        return "edit/contacts";
+    }
+
+    @RequestMapping(value = "/edit/contacts", method = RequestMethod.POST)
+    public String saveEditContacts(@Valid @ModelAttribute("contactsForm") Contacts contactsForm, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "edit/contacts";
+        }
+        editProfileService.updateContacts(SecurityUtil.getCurrentIdProfile(), contactsForm);
+        return "redirect:/edit/contacts";
     }
 
     private String gotoSkillsJSP(Model model) {

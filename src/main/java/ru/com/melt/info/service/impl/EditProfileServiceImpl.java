@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
+import ru.com.melt.info.entity.Contacts;
 import ru.com.melt.info.entity.Profile;
 import ru.com.melt.info.entity.Skill;
 import ru.com.melt.info.entity.SkillCategory;
@@ -82,6 +83,24 @@ public class EditProfileServiceImpl implements EditProfileService {
             profileRepository.save(profile);
             registerUpdateIndexProfileSkillsIfTransactionSuccess(idProfile, updateSkills);
         }
+    }
+
+    @Override
+    public Contacts findContactsById(long idProfile) {
+        return profileRepository.findOne(idProfile).getContacts();
+    }
+
+    @Override
+    @Transactional
+    public void updateContacts(long idProfile, Contacts contacts) {
+        Profile profile = profileRepository.findOne(idProfile);
+        int copiedFieldsCount = DataUtil.copyFields(contacts, profile.getContacts());
+        if (copiedFieldsCount > 0) {
+            profileRepository.save(profile);
+        } else {
+            LOGGER.debug("Profile contacts not updated");
+        }
+
     }
 
     private void registerUpdateIndexProfileSkillsIfTransactionSuccess(long idProfile, List<Skill> updateSkills) {
