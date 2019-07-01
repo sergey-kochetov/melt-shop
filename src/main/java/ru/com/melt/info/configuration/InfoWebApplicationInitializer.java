@@ -16,6 +16,8 @@ import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.filter.DelegatingFilterProxy;
+import org.springframework.web.filter.RequestContextFilter;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import ru.com.melt.info.filter.ResumeFilter;
@@ -47,6 +49,9 @@ public class InfoWebApplicationInitializer implements WebApplicationInitializer 
         registerFilter(container, ctx.getBean(ResumeFilter.class));
         registerFilter(container, new CharacterEncodingFilter("UTF-8", true));
         registerFilter(container, new OpenEntityManagerInViewFilter());
+        registerFilter(container, new RequestContextFilter());
+        registerFilter(container, new DelegatingFilterProxy("springSecurityFilterChain"), "springSecurityFilterChain");
+
         registerFilter(container, buildConfigurableSiteMeshFilter(), "sitemesh");
     }
 

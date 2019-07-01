@@ -1,3 +1,10 @@
+CREATE TABLE persistent_logins (
+    username VARCHAR(64) NOT NULL,
+    series VARCHAR(64) PRIMARY KEY,
+    token VARCHAR(64) NOT NULL,
+    last_used TIMESTAMP NOT NULL
+);
+
 CREATE TABLE certificate (
     id bigint NOT NULL,
     id_profile bigint NOT NULL,
@@ -327,3 +334,4 @@ REVOKE ALL ON SCHEMA public FROM PUBLIC;
 REVOKE ALL ON SCHEMA public FROM postgres;
 GRANT ALL ON SCHEMA public TO postgres;
 GRANT ALL ON SCHEMA public TO PUBLIC;
+

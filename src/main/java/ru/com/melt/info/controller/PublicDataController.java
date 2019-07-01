@@ -13,7 +13,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import ru.com.melt.info.entity.Profile;
+import ru.com.melt.info.model.CurrentProfile;
 import ru.com.melt.info.service.FindProfileService;
+import ru.com.melt.info.util.SecurityUtil;
+
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class PublicDataController {
@@ -54,4 +58,23 @@ public class PublicDataController {
 	    model.addAttribute("profiles", profiles.getContent());
 	    return "fragment/profile-items";
     }
+
+	@RequestMapping(value = "/sign-in")
+	public String signIn() {
+		CurrentProfile currentProfile = SecurityUtil.getCurrentProfile();
+		if(currentProfile != null) {
+			return "redirect:/" + currentProfile.getUsername();
+		}
+		else{
+			return "sign-in";
+		}
+	}
+
+	@RequestMapping(value = "/sign-in-failed")
+	public String signInFailed(HttpSession session) {
+		if (session.getAttribute("SPRING_SECURITY_LAST_EXCEPTION") == null) {
+			return "redirect:/sign-in";
+		}
+		return "sign-in";
+	}
 }

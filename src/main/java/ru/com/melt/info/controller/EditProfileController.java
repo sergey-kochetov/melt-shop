@@ -1,6 +1,7 @@
 package ru.com.melt.info.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import ru.com.melt.info.entity.Contacts;
 import ru.com.melt.info.form.*;
+import ru.com.melt.info.model.CurrentProfile;
 import ru.com.melt.info.service.EditProfileService;
 import ru.com.melt.info.util.SecurityUtil;
 
@@ -174,5 +176,10 @@ public class EditProfileController {
     private String gotoSkillsJSP(Model model) {
         model.addAttribute("skillCategories", editProfileService.listSkillCategories());
         return "edit/skills";
+    }
+
+    @RequestMapping(value = "/my-profile")
+    public String getMyProfile(@AuthenticationPrincipal CurrentProfile currentProfile) {
+        return "redirect:/" + currentProfile.getUsername();
     }
 }
