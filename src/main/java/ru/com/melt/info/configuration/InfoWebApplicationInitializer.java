@@ -21,7 +21,7 @@ import org.springframework.web.filter.RequestContextFilter;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import ru.com.melt.info.filter.ResumeFilter;
-import ru.com.melt.info.listener.ApplicationListener;
+import ru.com.melt.info.component.impl.ApplicationListener;
 
 public class InfoWebApplicationInitializer implements WebApplicationInitializer {
 

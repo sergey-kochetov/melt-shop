@@ -1,4 +1,4 @@
-package ru.com.melt.info.listener;
+package ru.com.melt.info.component.impl;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;

@@ -13,7 +13,7 @@ import java.io.IOException;
 @ComponentScan({ "ru.com.melt.info.service.impl",
 				 "ru.com.melt.info.controller",
 				 "ru.com.melt.info.filter",
-				 "ru.com.melt.info.listener"})
+				 "ru.com.melt.info.component.impl"})
 public class ServiceConfig {
 
 	@Bean
