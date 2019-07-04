@@ -2,7 +2,6 @@ package ru.com.melt.info.util;
 
 import org.apache.commons.lang.WordUtils;
 import org.springframework.util.ReflectionUtils;
-import ru.com.melt.info.entity.Contacts;
 import ru.com.melt.info.form.SignUpForm;
 
 import java.lang.annotation.Annotation;
@@ -72,6 +71,15 @@ public class DataUtil {
         } else {
             return new org.springframework.data.util.ReflectionUtils.AnnotationFieldFilter(annotation);
         }
+    }
+
+    public static String generateRandomString(String alphabet, int letterCount) {
+        Random r = new Random();
+        StringBuilder uid = new StringBuilder();
+        for (int i = 0; i < letterCount; i++) {
+            uid.append(alphabet.charAt(r.nextInt(alphabet.length())));
+        }
+        return uid.toString();
     }
 
     private static final class CopiedFieldsCounter {
