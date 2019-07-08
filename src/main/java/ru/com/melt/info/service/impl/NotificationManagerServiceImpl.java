@@ -41,6 +41,14 @@ public class NotificationManagerServiceImpl implements NotificationManagerServic
         processNotification(profile, "passwordChangedNotification", model);
     }
 
+    @Override
+    public void sendPasswordGenerated(Profile profile, String generatedPassword) {
+        LOGGER.debug("Password generated for account {}", profile.getUid());
+        Map<String, Object> model = buildNewModelWithProfile(profile);
+        model.put("generatedPassword", generatedPassword);
+        processNotification(profile, "passwordGeneratedNotification", model);
+    }
+
     private void processNotification(Profile profile, String templateName, Object model) {
         String destinationAddress = notificationSenderService.getDestinationAddress(profile);
         if (StringUtils.isNotBlank(destinationAddress)) {
@@ -51,5 +59,11 @@ public class NotificationManagerServiceImpl implements NotificationManagerServic
         } else {
             LOGGER.error("Notification ignored: destinationAddress is empty for profile " + profile.getUid());
         }
+    }
+
+    private Map<String, Object> buildNewModelWithProfile(Profile profile) {
+        Map<String, Object> model = new HashMap<>();
+        model.put("profile", profile);
+        return model;
     }
 }
