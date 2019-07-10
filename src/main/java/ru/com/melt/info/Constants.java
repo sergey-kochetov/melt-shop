@@ -1,6 +1,6 @@
 package ru.com.melt.info;
 
-public class Constants {
+public final class Constants {
     public static final String USER = "USER";
 
     public static final String[] EMPTY_ARRAY = {};

@@ -1,5 +1,7 @@
 package ru.com.melt.info.annotation.constraints;
 
+import ru.com.melt.info.validator.FieldMatchConstraintValidator;
+
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.Documented;
@@ -12,7 +14,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target({TYPE, ANNOTATION_TYPE})
 @Retention(RUNTIME)
-@Constraint(validatedBy = {})
+@Constraint(validatedBy = {FieldMatchConstraintValidator.class})
 @Documented
 public @interface FieldMatch {
     String message() default "FieldMatch";

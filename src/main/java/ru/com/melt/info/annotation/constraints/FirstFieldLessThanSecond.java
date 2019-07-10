@@ -1,5 +1,7 @@
 package ru.com.melt.info.annotation.constraints;
 
+import ru.com.melt.info.validator.FirstFieldLessThanSecondConstraintValidator;
+
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -13,10 +15,10 @@ import javax.validation.Payload;
 
 @Target({TYPE, ANNOTATION_TYPE})
 @Retention(RUNTIME)
-@Constraint(validatedBy = {})
+@Constraint(validatedBy = {FirstFieldLessThanSecondConstraintValidator.class})
 @Documented
 public @interface FirstFieldLessThanSecond {
-    String message() default "FieldMatch";
+    String message() default "FirstFieldLessThanSecond";
 
     Class<?>[] groups() default {};
 
