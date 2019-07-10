@@ -1,11 +1,13 @@
 package ru.com.melt.info.util;
 
 import org.apache.commons.lang.WordUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.util.ReflectionUtils;
 import ru.com.melt.info.form.SignUpForm;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
 
 public class DataUtil {
@@ -80,6 +82,14 @@ public class DataUtil {
             uid.append(alphabet.charAt(r.nextInt(alphabet.length())));
         }
         return uid.toString();
+    }
+
+    public static Object readProperty(Object obj, String propertyName) {
+        try {
+            return BeanUtils.getPropertyDescriptor(obj.getClass(), propertyName).getReadMethod().invoke(obj);
+        } catch (IllegalAccessException | InvocationTargetException | RuntimeException e) {
+            throw new IllegalArgumentException("Can't read property: '"+propertyName+"' from object:'"+obj.getClass()+"': "+e.getMessage(), e);
+        }
     }
 
     private static final class CopiedFieldsCounter {

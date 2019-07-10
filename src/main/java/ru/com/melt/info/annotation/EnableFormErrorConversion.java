@@ -5,7 +5,7 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface EnableFormErrorConvertation {
+public @interface EnableFormErrorConversion {
     String formName();
 
     String fieldReference();
@@ -16,6 +16,6 @@ public @interface EnableFormErrorConvertation {
     @Retention(RetentionPolicy.RUNTIME)
     @Documented
     @interface List {
-        EnableFormErrorConvertation[] value();
+        EnableFormErrorConversion[] value();
     }
 }

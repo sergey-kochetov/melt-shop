@@ -11,5 +11,5 @@ public interface DataBuilder {
 
     @Nonnull String rebuildUidWithRandomSuffix(@Nonnull String baseUid, @Nonnull String alphabet, int letterCount);
 
-    @Nonnull String buildCertificateName(@Nullable String fileName);
+    @Nullable String buildCertificateName(@Nullable String fileName);
 }
