@@ -1,7 +1,5 @@
 package ru.com.melt.info.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -15,6 +13,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.hibernate.validator.constraints.SafeHtml;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import ru.com.melt.info.annotation.constraints.EnglishLanguage;
+
 @Entity
 @Table(name="certificate")
 public class Certificate extends AbstractEntity<Long> implements Serializable, ProfileEntity {
@@ -27,12 +30,16 @@ public class Certificate extends AbstractEntity<Long> implements Serializable, P
 	private Long id;
 
 	@Column(name="large_url", nullable=false, length=255)
+	@JsonIgnore
 	private String largeUrl;
 	
 	@Column(name="small_url", nullable=false, length=255)
+	@JsonIgnore
 	private String smallUrl;
 
 	@Column(nullable=false, length=50)
+	@SafeHtml
+	@EnglishLanguage
 	private String name;
 
 	//bi-directional many-to-one association to Profile

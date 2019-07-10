@@ -4,13 +4,26 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import ru.com.melt.info.entity.Profile;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+
 public interface FindProfileService {
 
-	Profile findByUid(String uid);
+    @Nonnull
+    Page<Profile> findAll(@Nonnull Pageable pageable);
 
-	Page<Profile> findAll(Pageable pageable);
+    @Nullable
+    Profile findByUid(@Nonnull String uid);
 
-	Iterable<Profile> findAllForIndexing();
+    @Nonnull
+    Page<Profile> findBySearchQuery(@Nonnull String query, @Nonnull Pageable pageable);
 
-	Page<Profile> findBySearchQuety(String query, Pageable pageable);
+    void restoreAccess(@Nonnull String anyUnigueId);
+
+    @Nullable
+    Profile findByRestoreToken(@Nonnull String token);
+
+    @Nonnull
+    Iterable<Profile> findAllForIndexing();
 }

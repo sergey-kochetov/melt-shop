@@ -1,7 +1,10 @@
 package ru.com.melt.info.model;
 
+import ru.com.melt.info.util.DataUtil;
+
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
+import java.beans.PropertyEditorSupport;
 
 public enum LanguageType {
 
@@ -10,9 +13,13 @@ public enum LanguageType {
 	SPOKEN,
 
 	WRITING;
-	
+
+	public String getCaption() {
+		return DataUtil.capitalizeName(name());
+	}
+
 	public String getDbValue() {
-		return name().toLowerCase();
+		return name();
 	}
 
 	public LanguageType getReverseType() {
@@ -24,7 +31,16 @@ public enum LanguageType {
 			throw new IllegalArgumentException(this+" does not have reverse type");
 		}
 	}
-	
+
+	public static PropertyEditorSupport getPropertyEditor(){
+		return new PropertyEditorSupport(){
+			@Override
+			public void setAsText(String dbValue) throws IllegalArgumentException {
+				setValue(LanguageType.valueOf(dbValue.toUpperCase()));
+			}
+		};
+	}
+
 	@Converter
 	public static class PersistJPAConverter implements AttributeConverter<LanguageType, String> {
 		@Override

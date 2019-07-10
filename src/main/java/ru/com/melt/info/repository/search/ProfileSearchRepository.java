@@ -7,6 +7,8 @@ import ru.com.melt.info.entity.Profile;
 
 public interface ProfileSearchRepository extends ElasticsearchRepository<Profile, Long> {
 
-    Page<Profile> findByObjectiveLikeOrSummaryLikeOrPracticsCompanyLikeOrPracticsPositionLike(
-            String objective, String summary, String practicCompany, String practicPosition, Pageable pageable);
+    Page<Profile> findByObjectiveLikeOrSummaryLikeOrInfoLikeOrCertificatesNameLikeOrLanguagesNameLikeOrPracticsCompanyLikeOrPracticsPositionLikeOrPracticsResponsibilitiesLikeOrSkillsValueLike(
+            String objective, String info, String summary, String certificateName, String languageName, String practicCompany,
+            String practicPosition, String practicResponsibility, String skillValue, Pageable pageable);
+
 }

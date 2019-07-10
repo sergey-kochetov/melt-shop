@@ -20,7 +20,7 @@ import java.lang.annotation.Annotation;
 public class FormErrorConverterImpl implements FormErrorConverter {
 
     @Override
-    public void convertToFieldError(Class<? extends Annotation> validationAnnotationClass, Object formInstance, BindingResult bindingResult) {
+    public void convertFormErrorToFieldError(Class<? extends Annotation> validationAnnotationClass, Object formInstance, BindingResult bindingResult) {
         Annotation validationAnnotation = findValidationAnnotation(validationAnnotationClass, formInstance);
         List<EnableFormErrorConversion> metaAnnotations = findMetaAnnotations(formInstance);
         boolean found = false;

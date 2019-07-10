@@ -1,7 +1,7 @@
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" trimDirectiveWhitespaces="true"%>
 <%@ taglib prefix="c" 		uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" 	uri="http://www.springframework.org/tags/form"%>
-
+<%@ taglib prefix="sec" 	uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="resume" 	tagdir="/WEB-INF/tags"%>
 
 <resume:edit-tab-header selected="education" />
@@ -13,10 +13,11 @@
 		<hr />
 		<resume:form-display-error-if-invalid formName="educationForm" />
 		<form:form action="/edit/education" method="post" commandName="educationForm">
-
+			<sec:csrfInput/>
 			<div id="ui-block-container">
-
-
+				<c:forEach var="education" items="${educationForm.items }" varStatus="status">
+					<resume:edit-education-block index="${status.index}" education="${education }" />
+				</c:forEach>
 			</div>
 			<div class="row">
 				<div class="col-xs-12">

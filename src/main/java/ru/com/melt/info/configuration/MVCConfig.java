@@ -23,53 +23,54 @@ import java.util.List;
 
 @Configuration
 @EnableWebMvc
+@ComponentScan({"ru.com.melt.info.controller"})
 @EnableSpringDataWebSupport
-@ComponentScan({ "ru.com.melt.info.controller" })
 public class MVCConfig extends WebMvcConfigurerAdapter {
 
-	@Autowired
-	private ErrorHandler errorHandler;
+    @Autowired
+    private ErrorHandler errorHandler;
 
-	@Bean
-	public ViewResolver viewResolver() {
-		InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-		viewResolver.setViewClass(JstlView.class);
-		viewResolver.setPrefix("/WEB-INF/JSP/");
-		viewResolver.setSuffix(".jsp");
-		return viewResolver;
-	}
+    @Bean
+    public ViewResolver viewResolver() {
+        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+        viewResolver.setViewClass(JstlView.class);
+        viewResolver.setPrefix("/WEB-INF/JSP/");
+        viewResolver.setSuffix(".jsp");
+        return viewResolver;
+    }
 
-	@Override
-	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		registry.addResourceHandler("/static/**").addResourceLocations("/static/");
-		registry.addResourceHandler("/media/**").addResourceLocations("/media/");
-		registry.addResourceHandler("/favicon.ico").addResourceLocations("/favicon.ico");
-	}
+    @Bean
+    public CommonsMultipartResolver multipartResolver() {
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+        return multipartResolver;
+    }
 
-	@Override
-	public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> exceptionResolvers) {
-		exceptionResolvers.add(errorHandler);
-	}
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/static/**").addResourceLocations("/static/");
+        registry.addResourceHandler("/media/**").addResourceLocations("/media/");
+        registry.addResourceHandler("/favicon.ico").addResourceLocations("/favicon.ico");
+        registry.addResourceHandler("/browserconfig.xml").addResourceLocations("/browserconfig.xml");
+    }
 
-	@Bean
-	public CommonsMultipartResolver multipartResolver(){
-		CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-		return multipartResolver;
-	}
+    @Override
+    public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> exceptionResolvers) {
+        exceptionResolvers.add(errorHandler);
+    }
 
-	@Bean
-	public LocalValidatorFactoryBean localValidatorFactoryBean() {
-		LocalValidatorFactoryBean validatorFactoryBean = new LocalValidatorFactoryBean();
-		validatorFactoryBean.setProviderClass(HibernateValidator.class);
-		validatorFactoryBean.setValidationMessageSource(messageSource());
-		return validatorFactoryBean;
-	}
+    @Bean
+    public MessageSource messageSource() {
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        messageSource.setBasename("i18n.messages");
+        messageSource.setDefaultEncoding("UTF-8");
+        return messageSource;
+    }
 
-	@Bean
-	public MessageSource messageSource() {
-		ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-		messageSource.setBasename("i18n.messages");
-		messageSource.setDefaultEncoding("UTF-8");
-		return messageSource;
-	}
+    @Bean
+    public LocalValidatorFactoryBean localValidatorFactoryBean() {
+        LocalValidatorFactoryBean localValidatorFactoryBean = new LocalValidatorFactoryBean();
+        localValidatorFactoryBean.setProviderClass(HibernateValidator.class);
+        localValidatorFactoryBean.setValidationMessageSource(messageSource());
+        return localValidatorFactoryBean;
+    }
 }

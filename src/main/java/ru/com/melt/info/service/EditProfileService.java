@@ -1,51 +1,73 @@
 package ru.com.melt.info.service;
 
+import org.springframework.web.multipart.MultipartFile;
 import ru.com.melt.info.entity.*;
+import ru.com.melt.info.form.InfoForm;
+import ru.com.melt.info.form.PasswordForm;
 import ru.com.melt.info.form.SignUpForm;
+import ru.com.melt.info.model.CurrentProfile;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 public interface EditProfileService {
 
-    Profile createNewProfile(SignUpForm signUpForm);
+    @Nullable
+    Profile findProfileById(@Nonnull CurrentProfile currentProfile);
 
-    List<Skill> listSkills(long idProfile);
+    @Nonnull
+    Contacts findContactsById(@Nonnull CurrentProfile currentProfile);
 
+    @Nonnull
+    Profile createNewProfile(@Nonnull SignUpForm signUpForm);
+
+    void removeProfile(@Nonnull CurrentProfile currentProfile);
+
+    @Nonnull
+    Profile updateProfilePassword(@Nonnull CurrentProfile currentProfile, @Nonnull PasswordForm form);
+
+    void updateProfileData(@Nonnull CurrentProfile currentProfile, @Nonnull Profile data, @Nonnull MultipartFile uploadPhoto);
+
+    void updateContacts(@Nonnull CurrentProfile currentProfile, @Nonnull Contacts data);
+
+    void updateInfo(@Nonnull CurrentProfile currentProfile, @Nonnull InfoForm form);
+
+    @Nonnull
+    List<Hobby> listHobbiesWithProfileSelected(@Nonnull CurrentProfile currentProfile);
+
+    void updateHobbies(@Nonnull CurrentProfile currentProfile, @Nonnull List<String> hobbies);
+
+    @Nonnull
+    List<Language> listLanguages(@Nonnull CurrentProfile currentProfile);
+
+    void updateLanguages(@Nonnull CurrentProfile currentProfile, @Nonnull List<Language> languages);
+
+    @Nonnull
+    List<Skill> listSkills(@Nonnull CurrentProfile currentProfile);
+
+    @Nonnull
     List<SkillCategory> listSkillCategories();
 
-    void updateSkill(long idProfile, List<Skill> skills);
+    void updateSkills(@Nonnull CurrentProfile currentProfile, @Nonnull List<Skill> skills);
 
-    Contacts findContactsById(long idProfile);
+    @Nonnull
+    List<Practic> listPractics(@Nonnull CurrentProfile currentProfile);
 
-    void updateContacts(long idProfile, Contacts contacts);
+    void updatePractics(@Nonnull CurrentProfile currentProfile, @Nonnull List<Practic> practics);
 
-    List<Practic> findPracticsById(long idProfile);
+    @Nonnull
+    List<Education> listEducations(@Nonnull CurrentProfile currentProfile);
 
-    void updatePractics(long idProfile, List<Practic> practics);
+    void updateEducations(@Nonnull CurrentProfile currentProfile, @Nonnull List<Education> educations);
 
-    List<Certificate> findCertificatesById(long idProfile);
+    @Nonnull
+    List<Certificate> listCertificates(@Nonnull CurrentProfile currentProfile);
 
-    void updateCertificates(long idProfile, List<Certificate> certificates);
+    void updateCertificates(@Nonnull CurrentProfile currentProfile, @Nonnull List<Certificate> certificates);
 
-    List<Course> findCoursesById(long idProfile);
+    @Nonnull
+    List<Course> listCourses(@Nonnull CurrentProfile currentProfile);
 
-    void updateCourses(long idProfile, List<Course> courses);
-
-    List<Education> findEducationById(long idProfile);
-
-    void updateEducation(long idProfile, List<Education> educations);
-
-    List<Language> findLanguageById(long idProfile);
-
-    void updateLanguage(long idProfile, List<Language> languages);
-
-    List<Hobby> findHobbiesWithProfileSelected(long idProfile);
-
-    void updateHobbies(long idProfile, List<String> hobbies);
-
-    String findInfoById(long idProfile);
-
-    void updateInfo(long idProfile, String info);
-
-    Profile findProfileById(long idProfile);
+    void updateCourses(@Nonnull CurrentProfile currentProfile, @Nonnull List<Course> courses);
 }

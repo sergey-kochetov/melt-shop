@@ -335,3 +335,7 @@ REVOKE ALL ON SCHEMA public FROM postgres;
 GRANT ALL ON SCHEMA public TO postgres;
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
+
+ALTER TABLE public.skill
+  ADD COLUMN id_category SMALLINT NOT NULL;
+

@@ -27,8 +27,7 @@ public class NotificationManagerServiceImpl implements NotificationManagerServic
     @Override
     public void sendRestoreAccessLink(Profile profile, String restoreLink) {
         LOGGER.debug("Restore link: {} for account {}", restoreLink, profile.getUid());
-        Map<String, Object> model = new HashMap<>();
-        model.put("profile", profile);
+        Map<String, Object> model = buildNewModelWithProfile(profile);
         model.put("restoreLink", restoreLink);
         processNotification(profile, "restoreAccessNotification", model);
     }
@@ -36,9 +35,7 @@ public class NotificationManagerServiceImpl implements NotificationManagerServic
     @Override
     public void sendPasswordChanged(Profile profile) {
         LOGGER.debug("Password changed for account {}", profile.getUid());
-        Map<String, Object> model = new HashMap<>();
-        model.put("profile", profile);
-        processNotification(profile, "passwordChangedNotification", model);
+        processNotification(profile, "passwordChangedNotification", buildNewModelWithProfile(profile));
     }
 
     @Override
@@ -49,7 +46,13 @@ public class NotificationManagerServiceImpl implements NotificationManagerServic
         processNotification(profile, "passwordGeneratedNotification", model);
     }
 
-    private void processNotification(Profile profile, String templateName, Object model) {
+    protected Map<String, Object> buildNewModelWithProfile(Profile profile) {
+        Map<String, Object> model = new HashMap<>();
+        model.put("profile", profile);
+        return model;
+    }
+
+    protected void processNotification(Profile profile, String templateName, Object model) {
         String destinationAddress = notificationSenderService.getDestinationAddress(profile);
         if (StringUtils.isNotBlank(destinationAddress)) {
             NotificationMessage notificationMessage = notificationTemplateService.createNotificationMessage(templateName, model);
@@ -59,11 +62,5 @@ public class NotificationManagerServiceImpl implements NotificationManagerServic
         } else {
             LOGGER.error("Notification ignored: destinationAddress is empty for profile " + profile.getUid());
         }
-    }
-
-    private Map<String, Object> buildNewModelWithProfile(Profile profile) {
-        Map<String, Object> model = new HashMap<>();
-        model.put("profile", profile);
-        return model;
     }
 }

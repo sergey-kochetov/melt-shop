@@ -3,6 +3,7 @@ package ru.com.melt.info.service.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMailMessage;
@@ -12,13 +13,17 @@ import ru.com.melt.info.entity.Profile;
 import ru.com.melt.info.model.NotificationMessage;
 import ru.com.melt.info.service.NotificationSenderService;
 
+import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
+import java.io.UnsupportedEncodingException;
 import java.util.concurrent.ExecutorService;
 
 @Service
 public class AsyncEmailNotificationSenderService implements NotificationSenderService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AsyncEmailNotificationSenderService.class);
+
     @Autowired
+    @Qualifier("defaultExecutorService")
     private ExecutorService executorService;
 
     @Autowired
@@ -33,6 +38,9 @@ public class AsyncEmailNotificationSenderService implements NotificationSenderSe
     @Value("${email.sendTryCount}")
     private int tryCount;
 
+    @Value("${application.production}")
+    private boolean production;
+
     @Override
     public void sendNotification(NotificationMessage message) {
         executorService.submit(new EmailItem(message, tryCount));
@@ -43,11 +51,11 @@ public class AsyncEmailNotificationSenderService implements NotificationSenderSe
         return profile.getEmail();
     }
 
-    private class EmailItem implements Runnable {
-        private final NotificationMessage notificationMessage;
-        private int tryCount;
+    protected class EmailItem implements Runnable {
+        protected final NotificationMessage notificationMessage;
+        protected int tryCount;
 
-        private EmailItem(NotificationMessage notificationMessage, int tryCount) {
+        protected EmailItem(NotificationMessage notificationMessage, int tryCount) {
             super();
             this.notificationMessage = notificationMessage;
             this.tryCount = tryCount;
@@ -56,15 +64,13 @@ public class AsyncEmailNotificationSenderService implements NotificationSenderSe
         @Override
         public void run() {
             try {
-                LOGGER.debug("Send a new email to {}", notificationMessage.getDestinationAddress());
-                MimeMessageHelper message = new MimeMessageHelper(javaMailSender.createMimeMessage(), false);
-                message.setSubject(notificationMessage.getSubject());
-                message.setTo(new InternetAddress(notificationMessage.getDestinationAddress(), notificationMessage.getDestinationName()));
-                message.setFrom(fromEmail, fromName);
-                message.setText(notificationMessage.getContent());
-                MimeMailMessage msg = new MimeMailMessage(message);
-                javaMailSender.send(msg.getMimeMessage());
-                LOGGER.debug("Email to {} successful sent", notificationMessage.getDestinationAddress());
+                if (production) {
+                    MimeMailMessage msg = buildMessage();
+                    javaMailSender.send(msg.getMimeMessage());
+                    LOGGER.debug("Email to {} successful sent", notificationMessage.getDestinationAddress());
+                } else {
+                    LOGGER.warn("DEMO MODE: Email to {}, {}/{}", notificationMessage.getDestinationAddress(), notificationMessage.getSubject(), notificationMessage.getContent());
+                }
             } catch (Exception e) {
                 LOGGER.error("Can't send email to " + notificationMessage.getDestinationAddress() + ": " + e.getMessage(), e);
                 tryCount--;
@@ -75,6 +81,15 @@ public class AsyncEmailNotificationSenderService implements NotificationSenderSe
                     LOGGER.error("Email not sent to " + notificationMessage.getDestinationAddress());
                 }
             }
+        }
+
+        protected MimeMailMessage buildMessage() throws MessagingException, UnsupportedEncodingException {
+            MimeMessageHelper message = new MimeMessageHelper(javaMailSender.createMimeMessage(), false);
+            message.setSubject(notificationMessage.getSubject());
+            message.setTo(new InternetAddress(notificationMessage.getDestinationAddress(), notificationMessage.getDestinationName()));
+            message.setFrom(fromEmail, fromName);
+            message.setText(notificationMessage.getContent());
+            return new MimeMailMessage(message);
         }
     }
 }

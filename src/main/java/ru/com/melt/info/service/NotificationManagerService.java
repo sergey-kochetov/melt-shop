@@ -2,11 +2,13 @@ package ru.com.melt.info.service;
 
 import ru.com.melt.info.entity.Profile;
 
+import javax.annotation.Nonnull;
+
 public interface NotificationManagerService {
 
-    void sendRestoreAccessLink(Profile profile, String restoreLink);
+    void sendRestoreAccessLink(@Nonnull Profile profile, @Nonnull String restoreLink);
 
-    void sendPasswordChanged(Profile profile);
+    void sendPasswordChanged(@Nonnull Profile profile);
 
-    void sendPasswordGenerated(Profile profile, String generatedPassword);
+    void sendPasswordGenerated(@Nonnull Profile profile, @Nonnull String generatedPassword);
 }

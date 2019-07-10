@@ -39,9 +39,9 @@ public class ElasticSearchIndexingService {
                 profileSearchRepository.save(p);
                 LOGGER.info("Successful indexing of profile: " + p.getUid());
             }
-            LOGGER.info("Finish index of frofiles");
+            LOGGER.info("Finish index of profiles");
         } else {
-            LOGGER.info("indexAllDuringStartup is disable");
+            LOGGER.info("indexAllDuringStartup is disabled");
         }
     }
 }

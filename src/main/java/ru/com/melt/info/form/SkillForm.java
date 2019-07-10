@@ -1,10 +1,10 @@
 package ru.com.melt.info.form;
 
+import ru.com.melt.info.entity.Skill;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import ru.com.melt.info.entity.Skill;
 
 import javax.validation.Valid;
 

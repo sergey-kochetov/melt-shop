@@ -1,6 +1,7 @@
 package ru.com.melt.info.component.impl;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import ru.com.melt.info.filter.AbstractFilter;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Component
 public class ErrorHandler extends AbstractFilter implements HandlerExceptionResolver {
 
     @Value("${application.production}")

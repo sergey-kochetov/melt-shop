@@ -7,7 +7,7 @@
 <div class="panel panel-info small-center-block">
 	<div class="panel-heading">
 		<h3 class="panel-title">
-			<i class="fa fa-sign-in"></i> Вход в Ваш личный кабинет
+			<i class="fa fa-sign-in"></i> Вход в Ваш личный кабинет 
 		</h3>
 	</div>
 	<div class="panel-body">
@@ -18,7 +18,7 @@
 					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
-					${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}
+					${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message }
 					<c:remove var="SPRING_SECURITY_LAST_EXCEPTION" scope="session" />
 				</div>
 			</c:if>
@@ -35,7 +35,7 @@
 			<hr/>
 			<div class="form-group">
 			<button type="submit" class="btn btn-success">Войти</button>
-
+			
 			<a href="/fbLogin" class="btn btn-primary pull-right"><i class="fa fa-facebook"></i>&nbsp;&nbsp;Sign in with Facebook</a>
 			</div>
 			<hr/>

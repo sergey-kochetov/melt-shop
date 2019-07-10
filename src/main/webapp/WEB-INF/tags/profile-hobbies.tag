@@ -14,7 +14,7 @@
 	<div class="panel-body">
 		<div class="hobbies">
 			<table class="table table-bordered">
-				<c:forEach var="hobby" items="${hobbies}">
+				<c:forEach var="hobby" items="${hobbies }">
 				<tr>
 					<td><i class="fa hobby hobby-${hobby.cssClassName }"></i></td>
 					<td>${hobby.name }</td>

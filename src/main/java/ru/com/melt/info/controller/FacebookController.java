@@ -2,12 +2,14 @@ package ru.com.melt.info.controller;
 
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
+import com.restfb.FacebookClient.AccessToken;
 import com.restfb.Parameter;
 import com.restfb.Version;
 import com.restfb.scope.ExtendedPermissions;
 import com.restfb.scope.ScopeBuilder;
+import com.restfb.scope.UserDataPermissions;
 import com.restfb.types.User;
-import com.restfb.util.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -18,10 +20,9 @@ import ru.com.melt.info.entity.Profile;
 import ru.com.melt.info.service.SocialService;
 import ru.com.melt.info.util.SecurityUtil;
 
-import static com.restfb.FacebookClient.*;
-
 @Controller
 public class FacebookController {
+
     @Value("${social.facebook.idClient}")
     private String idClient;
 
@@ -31,40 +32,47 @@ public class FacebookController {
     private String redirectUrl;
 
     @Value("${application.host}")
-    public  void setRedirectUrl(String appHost) {
-        this.redirectUrl = String.format("%s/fromFb", appHost);
+    public void setRedirectUrl(String appHost) {
+        this.redirectUrl = appHost + "/fromFb";
     }
+
     @Autowired
     private SocialService<User> facebookSocialService;
 
-    private String getAuthoriveUrl() {
-        ScopeBuilder scopeBuilder = new ScopeBuilder();
-        scopeBuilder.addPermission(ExtendedPermissions.EMAIL);
+    private String getAuthorizeUrl() {
+        ScopeBuilder scopeBuilder = new ScopeBuilder()
+                .addPermission(ExtendedPermissions.EMAIL).addPermission(UserDataPermissions.USER_BIRTHDAY)
+                .addPermission(UserDataPermissions.USER_HOMETOWN).addPermission(UserDataPermissions.USER_LOCATION);
         FacebookClient client = new DefaultFacebookClient(Version.VERSION_2_6);
         return client.getLoginDialogUrl(idClient, redirectUrl, scopeBuilder);
     }
 
-    @RequestMapping(value = {"/fbLogin"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/fbLogin", "fbSignUp"}, method = RequestMethod.GET)
     public String gotoFacebook() {
-        return String.format("redirect:%s", getAuthoriveUrl());
+        return "redirect:" + getAuthorizeUrl();
     }
 
     @RequestMapping(value = {"/fromFb"}, method = RequestMethod.GET)
     public String fromFb(@RequestParam(value = "code", required = false) String code) {
         if (StringUtils.isBlank(code)) {
             return "redirect:/sign-in";
-        }
-        FacebookClient client = new DefaultFacebookClient(Version.VERSION_2_6);
-        AccessToken accessToken = client.obtainUserAccessToken(idClient, secret, redirectUrl, code);
-        client = new DefaultFacebookClient(accessToken.getAccessToken(), Version.VERSION_2_6);
-        User user = client.fetchObject("me",User.class, Parameter.with("fields", "name,email,first_name,last_name"));
-        Profile p = facebookSocialService.loginViaSocialNetwork(user);
-        if (p != null) {
-            SecurityUtil.authentificate(p);
-            return "redirect:/" + p.getUid();
         } else {
-            return "redirect:/sign-in";
+            User user = fetchMe(code);
+            Profile p = facebookSocialService.loginOrSignup(user);
+            if (p != null) {
+                SecurityUtil.authentificateWithRememberMe(p);
+                return "redirect:/" + p.getUid();
+            } else {
+                return "redirect:/sign-in";
+            }
         }
     }
 
+    protected User fetchMe(String code) {
+        FacebookClient client = new DefaultFacebookClient(Version.VERSION_2_6);
+        AccessToken accessToken = client.obtainUserAccessToken(idClient, secret, redirectUrl, code);
+        client = new DefaultFacebookClient(accessToken.getAccessToken(), Version.VERSION_2_6);
+        User user = client.fetchObject("me", User.class, Parameter.with("fields", "id,email,first_name,last_name,birthday,hometown,location"));
+        return user;
+    }
 }

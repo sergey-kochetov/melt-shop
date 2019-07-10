@@ -23,8 +23,8 @@
 					<div class="timeline-heading">
 						<h4 class="timeline-title">${education.summary }</h4>
 						<p>
-							<small class="dates"><i class="fa fa-calendar"></i>
-								${education.beginYear } -
+							<small class="dates"><i class="fa fa-calendar"></i> 
+								${education.beginYear } - 
 								<c:choose>
 								<c:when test="${education.finish }">
 								${education.finishYear }

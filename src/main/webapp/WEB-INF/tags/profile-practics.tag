@@ -23,8 +23,8 @@
 					<div class="timeline-heading">
 						<h4 class="timeline-title">${practic.position } at ${practic.company }</h4>
 						<p>
-							<small class="dates"><i class="fa fa-calendar"></i>
-								<fmt:formatDate value="${practic.beginDate }" pattern="MMM yyyy"/> -
+							<small class="dates"><i class="fa fa-calendar"></i> 
+								<fmt:formatDate value="${practic.beginDate }" pattern="MMM yyyy"/> - 
 								<c:choose>
 								<c:when test="${practic.finish }">
 								<fmt:formatDate value="${practic.finishDate }" pattern="MMM yyyy"/>

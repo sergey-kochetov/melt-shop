@@ -2,7 +2,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="resume" tagdir="/WEB-INF/tags"%>
-
 <div id="profile-not-found" class="row profile">
 	<div class="col-xs-12 col-sm-6 col-md-4">
 		<div class="panel panel-primary">

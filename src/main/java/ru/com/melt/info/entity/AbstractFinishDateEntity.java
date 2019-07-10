@@ -1,24 +1,32 @@
 package ru.com.melt.info.entity;
 
-import java.sql.Date;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import org.joda.time.DateTime;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @MappedSuperclass
 public abstract class AbstractFinishDateEntity<T> extends AbstractEntity<T> {
 	private static final long serialVersionUID = -3388293457711051284L;
 
 	@Column(name = "finish_date")
+	@Temporal(TemporalType.DATE)
+	@JsonIgnore
 	private Date finishDate;
 	
 	@Transient
+	@JsonIgnore
 	private Integer finishDateMonth;
 
 	@Transient
+	@JsonIgnore
 	private Integer finishDateYear;
 	
 	public Date getFinishDate() {

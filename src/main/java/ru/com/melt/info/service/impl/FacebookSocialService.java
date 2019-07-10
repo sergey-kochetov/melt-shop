@@ -49,25 +49,19 @@ public class FacebookSocialService extends AbstractCreateProfileService implemen
     private NotificationManagerService notificationManagerService;
 
     @Override
-    public Profile loginViaSocialNetwork(User model) {
-        return null;
-    }
-
-    @Override
-    public Profile login(User model) {
+    @Transactional
+    public Profile loginOrSignup(User model) {
         if (StringUtils.isNotBlank(model.getEmail())) {
-            Profile profile = profileRepository.findByEmail(model.getEmail());
-            if (profile != null) {
+            Profile p = profileRepository.findByEmail(model.getEmail());
+            if (p != null) {
                 LOGGER.debug("Found profile by email={} for login via facebook request", model.getEmail());
-                return profile;
+                return p;
             }
         }
-        return null;
+        return createNewProfile(model);
     }
 
-    @Override
-    @Transactional
-    public Profile createNewProfile(User model) {
+    protected Profile createNewProfile(User model) {
         String firstName = translitConverter.translit(model.getFirstName());
         String lastName = translitConverter.translit(model.getLastName());
         String generatedPassword = DataUtil.generateRandomString(generatePasswordAlphabet, generatePasswordLength);
