@@ -1,6 +1,7 @@
 package ru.com.melt.info.configuration;
 
 import org.hibernate.validator.HibernateValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -9,18 +10,25 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
+import ru.com.melt.info.component.impl.ErrorHandler;
+
+import java.util.List;
 
 @Configuration
 @EnableWebMvc
 @EnableSpringDataWebSupport
 @ComponentScan({ "ru.com.melt.info.controller" })
 public class MVCConfig extends WebMvcConfigurerAdapter {
+
+	@Autowired
+	private ErrorHandler errorHandler;
 
 	@Bean
 	public ViewResolver viewResolver() {
@@ -36,6 +44,11 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
 		registry.addResourceHandler("/static/**").addResourceLocations("/static/");
 		registry.addResourceHandler("/media/**").addResourceLocations("/media/");
 		registry.addResourceHandler("/favicon.ico").addResourceLocations("/favicon.ico");
+	}
+
+	@Override
+	public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> exceptionResolvers) {
+		exceptionResolvers.add(errorHandler);
 	}
 
 	@Bean

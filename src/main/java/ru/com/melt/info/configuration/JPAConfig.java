@@ -42,6 +42,7 @@ public class JPAConfig {
 		Properties properties = new Properties();
 		properties.put("hibernate.dialect", environment.getRequiredProperty("hibernate.dialect"));
 		properties.put("javax.persistence.validation.mode", "none");
+		properties.put("org.hibernate.flushMode", "COMMIT");
 		return properties;
 	}
 	
@@ -51,7 +52,7 @@ public class JPAConfig {
 		entityManagerFactory.setDataSource(dataSource());
 		entityManagerFactory.setPersistenceProviderClass(HibernatePersistenceProvider.class);
 		entityManagerFactory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
-		entityManagerFactory.setPackagesToScan("ru.com.melt.info");
+		entityManagerFactory.setPackagesToScan("ru.com.melt.info.entity");
 		entityManagerFactory.setJpaProperties(hibernateProperties());
 		return entityManagerFactory;
 	}
